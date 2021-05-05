@@ -2,7 +2,7 @@
 [Unit]
 Description=gunicorn daemon
 {% if gunicorn_socket is not none %}
-Requires=gunicorn.socket
+Requires={{ gunicorn_service_name }}.socket
 {% endif %}
 After=network.target
 
