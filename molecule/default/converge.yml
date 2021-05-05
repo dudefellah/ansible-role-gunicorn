@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include ansible-role-gunicorn"
+      include_role:
+        name: "ansible-role-gunicorn"
+      vars:
+        gunicorn_install_epel: true
+        gunicorn_service_working_directory: /home/gunicorn/test

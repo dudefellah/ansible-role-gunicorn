@@ -1,0 +1,11 @@
+---
+# vars file for ansible-role-gunicorn
+__gunicorn_packages:
+  centos:
+    7:
+      - python-gunicorn
+    8:
+      - python3-gunicorn
+  debian:
+    default:
+      - gunicorn

@@ -1,0 +1,112 @@
+---
+# defaults file for ansible-role-gunicorn
+
+# List of packages to be in stalled for gunicorn when running this role.
+# A null value implies that you would like this role to figure out the
+# appropriate packages for your platform. If you set a custom list (including
+# an empty list), that will be used instead.
+gunicorn_packages: null
+
+# CentOS-only option. CentOS 8 needs EPEL to find gunicorn in its package
+# repositories. Shouldn't' be needed if you're installing with pip.
+gunicorn_install_epel: false
+
+# The file and process owner of the gunicorn application
+gunicorn_owner: gunicorn
+
+# The file and process group for the gunicorn application
+gunicorn_group: gunicorn
+
+# Location of the pidfile to use.
+gunicorn_pidfile: /run/gunicorn/gunicorn.pid
+
+# Socket location when using a socket.
+gunicorn_socket: /run/gunicorn/gunicorn.sock
+
+# The location of the gunicorn binary
+gunicorn_bin_path: /usr/bin/gunicorn
+
+# Additional arguments to pass to gunicorn in the SystemD service
+gunicorn_service_extra_args:
+  - wsgi
+
+# The name of the gunicorn SystemD service
+gunicorn_service_name: gunicorn
+
+# The state of the gunicorn systemd service
+gunicorn_service_state: started
+
+# Set to true to enable the gunicorn service on boot
+gunicorn_service_enabled: true
+
+# When a change is made to an existing service, set the service to this state.
+# A state of `null` will cause nothing to happen.
+gunicorn_service_restarted_state: restarted
+
+# The SystemD RuntimeDirectory
+gunicorn_service_runtime_directory: /run/gunicorn
+
+# Set the working directory in the SystemD service
+gunicorn_service_working_directory: null
+
+# Location of the gunicorn config file
+gunicorn_config_path: /etc/gunicorn.conf.py
+
+# Permissions to set for the installed gunicorn config.
+gunicorn_config_mode: "0600"
+
+# When set to 'true', pip will be used to install gunicorn. When false, gunicorn
+# will be installed with your distribution's package manager.
+gunicorn_pip_enabled: false
+
+# The list of pip modules to install when installing with pip
+gunicorn_pip_packages:
+  - gunicorn
+
+# Specify if using a pip + a virtualenv for gunicorn
+gunicorn_pip_virtualenv: null
+
+# Specify the pip executable
+gunicorn_pip_executable: null
+
+# Specify the virtualenv command for pip installs
+gunicorn_pip_virtualenv_command: null
+
+# The remainder are all values that will end up in the gunicorn config file
+# (at `gunicorn_config_path`)
+
+gunicorn_bind: '127.0.0.1:8000'
+gunicorn_backlog: 2048
+
+gunicorn_workers: 1
+gunicorn_worker_class: 'sync'
+gunicorn_connections: 1000
+gunicorn_timeout: 30
+gunicorn_keepalive: 2
+
+gunicorn_spew: "False"
+
+gunicorn_daemon: "False"
+gunicorn_raw_env: []
+# This value is set in the general values area, but repeated (commented out)
+# here to remind you that it'll end up in the config file as `pidfile`
+# gunicorn_pidfile:
+gunicorn_umask: '0'
+gunicorn_user: 'None'
+# This value is set in the general values area, but repeated (commented out)
+# here to remind you that it'll end up in the config file as `group`
+#gunicorn_group: 
+gunicorn_tmp_upload_dir: 'None'
+
+gunicorn_errorlog: '-'
+gunicorn_loglevel: 'info'
+gunicorn_accesslog: '-'
+gunicorn_access_log_format: '%(h)s %(l)s %(u)s %(t)s \"%(r)s\" %(s)s %(b)s \"%(f)s\" \"%(a)s\"'
+
+gunicorn_proc_name: 'None'
+gunicorn_post_fork: '"""Gunicorn Post-Fork"""'
+gunicorn_pre_fork: '"""Gunicorn Pre-Fork"""'
+gunicorn_pre_exec: '"""Gunicorn Pre-Exec"""'
+gunicorn_when_ready: '"""Gunicorn When-Ready"""'
+gunicorn_worker_int: '"""Gunicorn Worker-Int"""'
+gunicorn_worker_abort: '"""Gunicorn Worker-Abort"""'

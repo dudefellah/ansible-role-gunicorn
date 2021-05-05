@@ -1,0 +1,71 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    # Hacky little raw step to get all dependencies installed all at once
+    - name: Install python
+      raw: |-
+        {% if inventory_hostname in [
+            'certbot-molecule-ubuntu-20-04-instance',
+            'certbot-molecule-ubuntu-20-10-instance'
+           ] %}
+        apt-get update && \
+          DEBIAN_FRONTEND=noninteractive \
+          apt-get -y install python3 \
+            python3-apt \
+            python3-pip \
+            python3-setuptools \
+            sudo \
+            systemd \
+            virtualenv >> /tmp/apt.log 2>&1
+        {% elif inventory_hostname.endswith('debian-stretch-instance') or
+                inventory_hostname.endswith('debian-buster-instance') %}
+        apt-get update && \
+          DEBIAN_FRONTEND=noninteractive \
+          apt-get -y install python python3 \
+            python3-apt \
+            python3-pip \
+            python3-setuptools \
+            python3-virtualenv \
+            python-apt \
+            python-pip \
+            python-setuptools \
+            python-virtualenv \
+            systemd \
+            sudo >> /tmp/apt.log 2>&1
+        {% elif inventory_hostname.endswith('centos-8-instance') %}
+        yum -y install python3-pip python3-setuptools python3-virtualenv >> /tmp/yum.log 2>&1
+        {% elif inventory_hostname.endswith('centos-7-instance') %}
+        yum -y install epel-release >> /tmp/yum.log 2>&1
+        yum -y update >> /tmp/yum.log 2>&1
+        yum -y install python-pip python-setuptools python-virtualenv >> /tmp/yum.log 2>&1
+        {% endif %}
+
+    - name: Create gunicorn group
+      group:
+        name: gunicorn
+
+    - name: Create gunicorn user
+      user:
+        name: gunicorn
+        group: gunicorn
+
+    - name: Create a workdir
+      file:
+        path: /home/gunicorn/test
+        state: directory
+        owner: gunicorn
+        group: gunicorn
+        mode: "0700"
+
+    - name: Deposit a test wsgy.py file
+      copy:
+        content: |
+          #!/usr/bin/env python
+          def application(env, start_response):
+            start_response('200 OK', [('Content-Type','text/html')])
+            return [b"Hello World"] 
+        dest: /home/gunicorn/test/wsgi.py
+        owner: gunicorn
+        group: gunicorn
+        mode: "0644"

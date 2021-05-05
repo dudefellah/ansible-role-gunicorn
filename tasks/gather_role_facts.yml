@@ -1,0 +1,19 @@
+---
+- name: Set list of packages to install
+  set_fact:
+    _gunicorn_packages: >-
+      {%- if gunicorn_packages is not none -%}
+      {{ gunicorn_packages }}
+      {%- elif (
+        (ansible_distribution|lower in __gunicorn_packages)
+        and (ansible_distribution_major_version|int in __gunicorn_packages[ansible_distribution|lower])
+      ) -%}
+        {{ __gunicorn_packages[ansible_distribution|lower][ansible_distribution_major_version|int] }}
+      {%- elif (
+        (ansible_distribution|lower in __gunicorn_packages)
+        and ('default' in __gunicorn_packages[ansible_distribution|lower])
+      ) -%}
+        {{ __gunicorn_packages[ansible_distribution|lower]['default'] }}
+      {%- else -%}
+        {{ omit }}
+      {%- endif -%}

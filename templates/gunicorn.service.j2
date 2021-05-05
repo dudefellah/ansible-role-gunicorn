@@ -1,0 +1,30 @@
+# {{ ansible_managed }}
+[Unit]
+Description=gunicorn daemon
+{% if gunicorn_socket is not none %}
+Requires=gunicorn.socket
+{% endif %}
+After=network.target
+
+[Service]
+Type=notify
+# the specific user that our service will run as
+User={{ gunicorn_owner }}
+Group={{ gunicorn_group }}
+# another option for an even more restricted service is
+# DynamicUser=yes
+# see http://0pointer.net/blog/dynamic-users-with-systemd.html
+{% if gunicorn_service_runtime_directory is not none %}
+RuntimeDirectory={{ gunicorn_service_runtime_directory }}
+{% endif %}
+{% if gunicorn_service_working_directory is not none %}
+WorkingDirectory={{ gunicorn_service_working_directory }}
+{% endif %}
+ExecStart={{ gunicorn_bin_path }} {% if gunicorn_service_working_directory %}--chdir {{ gunicorn_service_working_directory }}{% endif %} {% if (gunicorn_config is not none) and (gunicorn_config_path is not none) %}--config {{ gunicorn_config_path }}{% endif %} {{ gunicorn_service_extra_args | join(' ') }}
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
