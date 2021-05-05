@@ -30,16 +30,6 @@
     path: "{{ gunicorn_pidfile | dirname }}"
   register: __pid_path_name
 
-- name: Create a spot for user owned gunicorn to write the pidfile
-  file:
-    path: "{{ gunicorn_pidfile | dirname }}"
-    state: directory
-    owner: "{{ gunicorn_owner }}"
-    group: "{{ gunicorn_group }}"
-    mode: "0770"
-  when:
-    - "not __pid_path_name.stat.exists"
-
 - name: Install the gunicorn config file
   template:
     src: gunicorn.conf.py.j2
@@ -67,7 +57,14 @@
         group: root
         mode: "0644"
       when:
-        - "gunicorn_socket is not none"
+        - "gunicorn_socket|bool"
+
+    - name: Remove the systemd socket
+      file:
+        path: "/etc/systemd/system/{{ gunicorn_service_name }}.socket"
+        state: absent
+      when:
+        - "not gunicorn_socket|bool"
 
     - name: Make sure systemd gets updated before managing the service
       meta: flush_handlers

@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 [Unit]
 Description=gunicorn daemon
-{% if gunicorn_socket is not none %}
+{% if gunicorn_socket|bool %}
 Requires={{ gunicorn_service_name }}.socket
 {% endif %}
 After=network.target
@@ -15,7 +15,7 @@ Group={{ gunicorn_group }}
 # DynamicUser=yes
 # see http://0pointer.net/blog/dynamic-users-with-systemd.html
 {% if gunicorn_service_runtime_directory is not none %}
-RuntimeDirectory={{ gunicorn_service_runtime_directory }}
+RuntimeDirectory={{ gunicorn_pidfile | dirname | regex_replace('^/var/run/', '') }}
 {% endif %}
 {% if gunicorn_service_working_directory is not none %}
 WorkingDirectory={{ gunicorn_service_working_directory }}

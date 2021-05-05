@@ -47,9 +47,6 @@ gunicorn_service_daemon_reload: true
 # A state of `null` will cause nothing to happen.
 gunicorn_service_restarted_state: restarted
 
-# The SystemD RuntimeDirectory
-gunicorn_service_runtime_directory: /run/gunicorn
-
 # Set the working directory in the SystemD service
 gunicorn_service_working_directory: null
 
