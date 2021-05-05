@@ -25,11 +25,6 @@
   when:
     - "gunicorn_pip_enabled|bool"
 
-- name: Look for a pidfile directory
-  stat:
-    path: "{{ gunicorn_pidfile | dirname }}"
-  register: __pid_path_name
-
 - name: Install the gunicorn config file
   template:
     src: gunicorn.conf.py.j2
@@ -37,6 +32,8 @@
     owner: "{{ gunicorn_owner }}"
     group: "{{ gunicorn_group }}"
     mode: "{{ gunicorn_config_mode }}"
+  notify:
+    - restart service
 
 - block:
     - name: Install the systemd service
