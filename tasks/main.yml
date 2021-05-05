@@ -49,9 +49,6 @@
     mode: "{{ gunicorn_config_mode }}"
 
 - block:
-    - debug:
-        msg: "Service mgr: {{ ansible_service_mgr }}"
-
     - name: Install the systemd service
       template:
         src: gunicorn.service.j2
@@ -80,3 +77,5 @@
     name: "{{ gunicorn_service_name }}"
     state: "{{ gunicorn_service_state }}"
     enabled: "{{ gunicorn_service_enabled }}"
+  when:
+    - "gunicorn_service_state is not none"

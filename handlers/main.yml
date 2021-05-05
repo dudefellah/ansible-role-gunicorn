@@ -2,10 +2,11 @@
 # handlers file for ansible-role-gunicorn
 - name: Systemd daemon reload
   systemd:
-    daemon_reload: true
+    daemon_reload: "{{ gunicorn_service_daemon_reload }}"
   listen: systemctl daemon-reload
   when:
     - "ansible_service_mgr == 'systemd'"
+    - "gunicorn_service_daemon_reload"
 
 - name: Restart the service
   service:

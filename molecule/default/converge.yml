@@ -8,3 +8,5 @@
       vars:
         gunicorn_install_epel: true
         gunicorn_service_working_directory: /home/gunicorn/test
+        gunicorn_service_daemon_reload: null
+        gunicorn_service_state: null

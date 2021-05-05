@@ -39,6 +39,10 @@ gunicorn_service_state: started
 # Set to true to enable the gunicorn service on boot
 gunicorn_service_enabled: true
 
+# Set to false if you don't want to run a daemon-reload
+# or null to skip the daemon-reload task altogether
+gunicorn_service_daemon_reload: true
+
 # When a change is made to an existing service, set the service to this state.
 # A state of `null` will cause nothing to happen.
 gunicorn_service_restarted_state: restarted
