@@ -43,8 +43,7 @@
         owner: root
         group: root
         mode: "0644"
-      notify:
-        - systemctl daemon-reload
+      register: _gunicorn_service_installed
 
     - name: Install the systemd socket
       template:
@@ -63,8 +62,13 @@
       when:
         - "not gunicorn_socket|bool"
 
-    - name: Make sure systemd gets updated before managing the service
-      meta: flush_handlers
+    - name: Daemon-reload
+      systemd:
+        daemon_reload: "{{ gunicorn_service_daemon_reload }}"
+      when:
+        - "ansible_service_mgr == 'systemd'"
+        - "gunicorn_service_daemon_reload"
+        - "_gunicorn_service_installed.changed"
 
 - name: Set the service state
   service:
