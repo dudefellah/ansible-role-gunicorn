@@ -11,7 +11,7 @@
   when:
     - "gunicorn_pip_executable is not none"
 
-- name: Install certbot with pip (venv) - with command
+- name: Install with pip (venv) - with command
   pip:
     name: "{{ gunicorn_pip_packages }}"
     state: present
@@ -28,7 +28,7 @@
     - "gunicorn_pip_virtualenv is not none"
     - "gunicorn_pip_virtualenv_command is not none"
 
-- name: Install certbot with pip (venv) - no command
+- name: Install with pip (venv) - no command
   pip:
     name: "{{ gunicorn_pip_packages }}"
     state: present

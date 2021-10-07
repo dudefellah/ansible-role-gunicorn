@@ -6,8 +6,8 @@
     - name: Install python
       raw: |-
         {% if inventory_hostname in [
-            'certbot-molecule-ubuntu-20-04-instance',
-            'certbot-molecule-ubuntu-20-10-instance'
+            'gunicorn-molecule-ubuntu-20-04-instance',
+            'gunicorn-molecule-ubuntu-20-10-instance'
            ] %}
         apt-get update && \
           DEBIAN_FRONTEND=noninteractive \
@@ -64,7 +64,7 @@
           #!/usr/bin/env python
           def application(env, start_response):
             start_response('200 OK', [('Content-Type','text/html')])
-            return [b"Hello World"] 
+            return [b"Hello World"]
         dest: /home/gunicorn/test/wsgi.py
         owner: gunicorn
         group: gunicorn
